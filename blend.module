@@ -72,7 +72,6 @@ function template_preprocess_blend_page_admin_blend(&$variables) {
  * Form for admin/blend.
  */
 function blend_page_admin_blend_form($form, &$form_state) {
-  $form['#action'] = 'blend/generate';
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Go'),
@@ -84,7 +83,7 @@ function blend_page_admin_blend_form($form, &$form_state) {
  * Submit handler for blend_page_admin_blend_form.
  */
 function blend_page_admin_blend_form_submit($form, &$form_state) {
-  drupal_set_message(t('Form submitted successfully.'));
+  drupal_goto('admin/blend/generate');
 }
 
 /**
@@ -101,4 +100,23 @@ function _blend_page_admin_blend_generate() {
   print theme('blend_page_admin_blend_generate');
 
   drupal_exit();
+}
+
+/**
+ * Preprocesses blend_page_admin_blend_generate.
+ */
+function blend_preprocess_blend_page_admin_blend_generate(&$variables) {
+  $node_types = array();
+  $node_types_info = node_type_get_types();
+  if ($node_types_info !== FALSE) {
+    $node_type_count = 0;
+    foreach ($node_types_info as $node_type_type => $node_type_info) {
+      $node_type = new stdClass();
+      $node_type->type = $node_type_type;
+      $node_type->location = ($node_type_count * 4) . ',0,0';
+      $node_types[$node_type_type] = $node_type;
+      $node_type_count++;
+    }
+  }
+  $variables['node_types'] = $node_types;
 }
