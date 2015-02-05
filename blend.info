@@ -1,0 +1,4 @@
+name = Blend
+description = A module to integrate Blender and Drupal.
+package = Blender
+core = 7.x

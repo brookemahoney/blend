@@ -1,0 +1,91 @@
+<?php
+/**
+ * @file
+ * Main code for the Blend module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function blend_menu() {
+  return array(
+    'admin/blend' => array(
+      'title' => t('Blend'),
+      'description' => t('Admin page for the Blend module.'),
+      'page callback' => '_blend_page_admin_blend',
+      'access arguments' => array('administer blend'),
+    ),
+    'admin/blend/generate' => array(
+      'title' => t('Generate a .py file for importing into Blender.'),
+      'description' => t('Generates a .py file for importing into Blender.'),
+      'type' => MENU_CALLBACK,
+      'access arguments' => array('administer blend'),
+      'page callback' => '_blend_page_admin_blend_generate',
+    ),
+  );
+}
+
+/**
+ * Implements hook_permission().
+ */
+function blend_permission() {
+  return array(
+    'administer blend' =>  array(
+      'title' => t('Administer the Blend module'),
+      'description' => t('Perform administration tasks for the Blend module.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function blend_theme($existing, $type, $theme, $path) {
+  return array(
+    'blend_page_admin_blend' => array(
+      'variables' => array('form' => array()),
+      'template' => 'blend-page-admin-blend'
+    ),
+  );
+}
+
+/**
+ * Page callback for admin/blend.
+ */
+function _blend_page_admin_blend() {
+  return theme('blend_page_admin_blend', array());
+}
+
+/**
+ * Preprocesses blend_page_admin_blend.
+ */
+function template_preprocess_blend_page_admin_blend(&$variables) {
+  $form = drupal_get_form('blend_page_admin_blend_form');
+  $variables['form'] = drupal_render($form);
+}
+
+/**
+ * Form for admin/blend.
+ */
+function blend_page_admin_blend_form($form, &$form_state) {
+  $form['#action'] = 'blend/generate';
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Go'),
+  );
+  return $form;
+}
+
+/**
+ * Submit handler for blend_page_admin_blend_form.
+ */
+function blend_page_admin_blend_form_submit($form, &$form_state) {
+  drupal_set_message(t('Form submitted successfully.'));
+}
+
+/**
+ * Page callback for admin/blend/generate.
+ */
+function _blend_page_admin_blend_generate() {
+  return l('Placeholder. This page will generate a .py file.', 'admin/blend');
+}
